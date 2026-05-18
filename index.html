@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThePermitGraph | AI-Powered Permit & Compliance Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+:root{
+  /* ThePermitGraph Colours: Deep Navy, Electric Blue, Emerald Green */
+  --blue:#0F3460;
+  --blue-light:#1A5276;
+  --blue-dim:#0A2647;
+  --blue-dark:#07203A;
+  --blue-deeper:#030F1C;
+
+  --accent:#00D4AA;
+  --accent-light:#B2F5EA;
+  --accent-dim:#00B896;
+
+  /* Nav / Footer BG Deep Navy */
+  --nav-bg:#0F3460;
+  --footer-bg:#07203A;
+
+  /* Page Backgrounds Ice / Cool White */
+  --bg-white:#F4F9FF;
+  --bg-light:#EBF4FF;
+  --bg-section:#D6EAF8;
+  --bg-card:#F4F9FF;
+
+  --card-border:rgba(15,52,96,0.18);
+  --card-border-strong:rgba(15,52,96,0.38);
+
+  --text-dark:#060F1E;
+  --text-mid:#0D2B4A;
+  --text-muted:#3A5F82;
+  --text-light:#6B8FA8;
+  --white:#FFFFFF;
+
+  --nav-h:72px;
+  --max-w:1200px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --display:'Sora',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+  --ease-out:cubic-bezier(0,0,0.2,1);
+}
+
+body{font-family:var(--font);color:var(--text-dark);background:var(--bg-white);overflow-x:hidden;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg-light);}
+::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px;}
+
+img{display:block;max-width:100%;}
+
+/* ─── NAVBAR ─────────────────────────────────────────── */
+.navbar{
+  position:fixed;top:0;left:0;width:100%;height:var(--nav-h);
+  background:var(--nav-bg);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  z-index:1000;display:flex;align-items:center;
+  padding:0 clamp(16px,5vw,60px);
+  justify-content:space-between;
+  transition:border-color 0.3s;
+  box-shadow:0 2px 24px rgba(7,32,58,0.4);
+}
+.nav-logo{
+  font-family:var(--display);font-size:18px;font-weight:800;
+  color:var(--white);letter-spacing:-0.3px;
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;text-decoration:none;flex-shrink:0;
+}
+.nav-logo-icon{
+  width:40px;height:40px;
+  background:rgba(0,212,170,0.25);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,0.2);
+  border:1px solid rgba(0,212,170,0.4);
+}
+.nav-logo-icon svg{width:22px;height:22px;fill:none;stroke:#00D4AA;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1;}
+.nav-logo-text span{font-size:10px;font-family:var(--mono);font-weight:500;color:rgba(255,255,255,0.7);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links li button{
+  background:none;border:none;
+  color:rgba(255,255,255,0.85);
+  font-size:11px;font-weight:600;
+  padding:8px 14px;border-radius:7px;
+  transition:all 0.22s var(--ease);
+  cursor:pointer;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;
+  position:relative;white-space:nowrap;
+}
+.nav-links li button:hover{color:#fff;background:rgba(255,255,255,0.15);}
+.nav-links li button.active{color:#fff;background:rgba(255,255,255,0.2);}
+.nav-links li button.active::after{
+  content:'';position:absolute;bottom:5px;left:50%;
+  transform:translateX(-50%);width:14px;height:2px;
+  background:var(--accent);border-radius:2px;
+}
+
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-demo-nav{
+  background:var(--accent);
+  color:var(--blue-dark);border:none;padding:9px 20px;border-radius:8px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  transition:all 0.22s;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 2px 10px rgba(0,212,170,0.3);
+}
+.btn-demo-nav:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,212,170,0.45);background:var(--accent-dim);}
+
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;flex-shrink:0;}
+.hamburger span{width:22px;height:2px;background:#fff;border-radius:2px;transition:0.3s;display:block;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.mobile-nav{
+  display:none;position:fixed;top:var(--nav-h);left:0;width:100%;
+  background:var(--blue-dark);backdrop-filter:blur(20px);
+  padding:12px 20px 20px;flex-direction:column;gap:2px;
+  z-index:999;border-bottom:1px solid rgba(255,255,255,0.1);
+  animation:slideDown 0.25s var(--ease-out);
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mobile-nav.open{display:flex;}
+.mobile-nav button{
+  background:none;border:none;color:rgba(255,255,255,0.8);
+  font-size:13px;font-weight:600;padding:13px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;font-family:var(--mono);text-align:left;
+  text-transform:uppercase;letter-spacing:1px;
+  transition:color 0.2s,background 0.2s;border-radius:6px;
+}
+.mobile-nav button:hover{color:#fff;background:rgba(255,255,255,0.1);}
+.mobile-nav .mob-cta{
+  margin-top:8px;background:var(--accent);
+  color:var(--blue-dark);border:none;padding:13px;
+  border-radius:8px;font-weight:700;font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  font-family:var(--mono);
+}
+
+/* ─── PAGE SYSTEM ─────────────────────────────────────── */
+.page{display:none;min-height:100vh;padding-top:var(--nav-h);}
+.page.active{display:block;animation:pgIn 0.35s var(--ease);}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── SECTION COMMONS ─────────────────────────────────── */
+.label-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--blue-dim);margin-bottom:14px;
+}
+.label-tag::before{content:'';width:20px;height:1px;background:var(--blue);}
+.label-tag-white{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,0.8);margin-bottom:14px;
+}
+.label-tag-white::before{content:'';width:20px;height:1px;background:rgba(255,255,255,0.6);}
+
+.section-h2{
+  font-family:var(--display);font-size:clamp(28px,3.5vw,52px);
+  font-weight:800;line-height:1.1;letter-spacing:-0.8px;
+  margin-bottom:10px;
+}
+.section-h2.blue-txt{color:var(--blue-dark);}
+.section-h2.dark{color:var(--text-dark);}
+.section-h2.white{color:var(--white);}
+
+.section-divider{width:56px;height:3px;margin:16px 0 28px;border-radius:2px;}
+.divider-blue{background:linear-gradient(90deg,var(--blue),transparent);}
+.divider-white{background:linear-gradient(90deg,rgba(255,255,255,0.8),transparent);}
+.divider-center{margin:16px auto 28px;}
+
+.para-dark{color:var(--text-mid);line-height:1.85;font-size:17px;}
+.para-light{color:rgba(255,255,255,0.85);line-height:1.85;font-size:17px;}
+
+.container{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+
+/* ─── BUTTONS ─────────────────────────────────────────── */
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+  color:var(--white);padding:13px 28px;border-radius:8px;
+  text-decoration:none;font-weight:700;font-size:12px;
+  letter-spacing:0.8px;text-transform:uppercase;
+  transition:all 0.25s;font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(15,52,96,0.35);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(15,52,96,0.5);}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid var(--blue);color:var(--blue-dark);
+  padding:12px 28px;border-radius:8px;text-decoration:none;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);background:none;cursor:pointer;
+}
+.btn-secondary:hover{background:rgba(15,52,96,0.08);border-color:var(--blue-dim);}
+
+.btn-white{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--white);color:var(--blue-dark);
+  padding:12px 28px;border-radius:8px;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,0.12);
+}
+.btn-white:hover{transform:translateY(-2px);background:var(--accent-light);box-shadow:0 8px 28px rgba(0,0,0,0.2);}
+
+/* ─── STATUS BADGES ─────────────────────────────── */
+.risk-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;
+  font-size:10px;font-weight:700;font-family:var(--mono);letter-spacing:0.5px;
+}
+.risk-blue{background:rgba(15,52,96,0.1);color:var(--blue-dim);border:1px solid rgba(15,52,96,0.28);}
+.risk-light{background:rgba(178,245,234,0.5);color:var(--blue-dark);border:1px solid rgba(0,212,170,0.3);}
+.risk-green{background:rgba(0,212,170,0.12);color:#008C72;border:1px solid rgba(0,212,170,0.3);}
+.risk-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* ─── HERO ─────────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(140deg,#EBF4FF 0%,#D6EAF8 40%,#B2F5EA 100%);
+  padding:clamp(60px,10vw,100px) 0 clamp(50px,8vw,80px);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-80px;right:-80px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(15,52,96,0.1) 0%,transparent 70%);
+}
+.hero-inner{
+  max-width:var(--max-w);margin:0 auto;
+  padding:0 clamp(16px,4vw,60px);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);
+  align-items:center;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(15,52,96,0.12);border:1px solid rgba(15,52,96,0.3);
+  border-radius:30px;padding:6px 16px;
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  color:var(--blue-dim);letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:22px;
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+h1{
+  font-family:var(--display);font-size:clamp(34px,5vw,64px);
+  font-weight:800;line-height:1.06;letter-spacing:-1.5px;color:var(--text-dark);
+  margin-bottom:6px;
+}
+h1 .blue{color:var(--blue);}
+h1 .dark-blue{color:var(--blue-dark);}
+.hero-rule{width:48px;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:2px;margin:20px 0;}
+.hero-body{font-size:17px;color:var(--text-mid);line-height:1.8;margin-bottom:28px;max-width:540px;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+
+.hero-mini-stats{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;}
+.hero-mini-card{
+  background:rgba(255,255,255,0.8);
+  border:1px solid rgba(15,52,96,0.2);
+  border-radius:12px;padding:14px 18px;min-width:140px;
+  backdrop-filter:blur(8px);
+}
+.hero-mini-card strong{
+  display:block;font-family:var(--display);
+  font-size:22px;font-weight:800;color:var(--blue-dark);
+}
+.hero-mini-card span{font-size:11px;color:var(--text-muted);font-family:var(--mono);}
+
+/* DASHBOARD CARD */
+.score-card{
+  background:#fff;border-radius:18px;
+  border:1px solid rgba(15,52,96,0.18);
+  padding:24px;box-shadow:0 8px 40px rgba(15,52,96,0.12);
+}
+.score-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;}
+.score-card-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+.dashboard-title{font-family:var(--display);font-size:17px;font-weight:700;color:var(--text-dark);}
+.live-dot-wrap{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--accent);letter-spacing:1.5px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite;}
+.score-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(15,52,96,0.08);}
+.score-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;flex-shrink:0;}
+.score-icon.blue-bg{background:rgba(15,52,96,0.12);color:var(--blue-dim);}
+.score-icon.light-bg{background:rgba(178,245,234,0.4);color:var(--blue-dark);}
+.score-icon.green-bg{background:rgba(0,212,170,0.12);color:#008C72;}
+.score-lbl{flex:1;font-size:12px;color:var(--text-muted);}
+.score-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text-dark);}
+.score-big{display:flex;align-items:center;gap:16px;margin-top:18px;padding:16px;background:linear-gradient(135deg,rgba(15,52,96,0.08),rgba(0,212,170,0.1));border-radius:12px;border:1px solid rgba(15,52,96,0.15);}
+.score-big-num{font-family:var(--display);font-size:48px;font-weight:800;color:var(--blue);line-height:1;}
+.score-big-info .label{font-size:13px;font-weight:700;color:var(--text-dark);}
+.score-big-info .sub{font-size:11px;color:var(--text-muted);margin-top:3px;font-family:var(--mono);}
+
+/* ─── STATS STRIP ─────────────────────────────────────── */
+.section-blue{
+  background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue-deeper) 100%);
+  padding:clamp(60px,8vw,96px) 0;
+}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px;
+}
+.stat-card{
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);
+  border-radius:16px;padding:clamp(20px,3vw,30px);
+  text-align:center;transition:transform 0.25s,border-color 0.25s;
+}
+.stat-card:hover{transform:translateY(-4px);border-color:rgba(0,212,170,0.4);}
+.stat-num{font-family:var(--display);font-size:clamp(32px,4vw,48px);font-weight:800;color:#fff;margin-bottom:10px;}
+.stat-lbl{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;}
+
+/* ─── PLATFORM SECTION ─────────────────────────────────── */
+.platform-section{background:var(--bg-white);padding:clamp(60px,8vw,96px) 0;}
+.platform-sub{max-width:760px;margin-bottom:44px;color:var(--text-mid);}
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+.platform-card{
+  background:#fff;border:1px solid rgba(15,52,96,0.15);
+  border-radius:18px;overflow:hidden;
+  transition:border-color 0.3s,box-shadow 0.3s,transform 0.3s;
+  box-shadow:0 2px 12px rgba(15,52,96,0.06);
+}
+.platform-card:hover{border-color:rgba(15,52,96,0.35);box-shadow:0 12px 40px rgba(15,52,96,0.12);transform:translateY(-3px);}
+.platform-img-wrap{width:100%;height:180px;overflow:hidden;background:linear-gradient(135deg,var(--bg-light),var(--bg-section));display:flex;align-items:center;justify-content:center;}
+.platform-img-wrap i{font-size:56px;color:rgba(15,52,96,0.25);}
+.platform-card .inner{padding:22px;}
+.element-badge{
+  display:inline-block;background:rgba(15,52,96,0.1);
+  color:var(--blue-dim);border-radius:6px;
+  padding:3px 10px;font-family:var(--mono);font-size:9px;
+  font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:12px;border:1px solid rgba(15,52,96,0.18);
+}
+.platform-card h3{font-family:var(--display);font-size:17px;font-weight:700;color:var(--text-dark);margin-bottom:10px;line-height:1.3;}
+.platform-card p{font-size:13px;color:var(--text-muted);line-height:1.75;}
+.more-text{display:none;font-size:13px;color:var(--text-muted);line-height:1.75;margin-top:10px;padding-top:10px;border-top:1px solid rgba(15,52,96,0.1);}
+.platform-card.open .more-text{display:block;}
+.expand-btn{
+  margin-top:16px;background:none;border:1px solid rgba(15,52,96,0.28);
+  color:var(--blue-dim);padding:7px 18px;border-radius:7px;
+  font-size:11px;font-weight:700;cursor:pointer;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;transition:all 0.2s;
+}
+.expand-btn:hover{background:rgba(15,52,96,0.08);border-color:var(--blue);}
+
+/* ─── WHY SECTION ─────────────────────────────────────── */
+.why-section{background:var(--bg-light);padding:clamp(60px,8vw,96px) 0;}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px;}
+.why-card{
+  background:#fff;border:1px solid rgba(15,52,96,0.15);
+  border-radius:16px;padding:clamp(20px,3vw,30px);
+  transition:border-color 0.25s,box-shadow 0.25s;
+}
+.why-card:hover{border-color:rgba(15,52,96,0.35);box-shadow:0 8px 28px rgba(15,52,96,0.1);}
+.why-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(15,52,96,0.12),rgba(0,212,170,0.15));
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;font-size:20px;color:var(--blue);
+  border:1px solid rgba(15,52,96,0.18);
+}
+.why-card h4{font-family:var(--display);font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:10px;}
+.why-card p{font-size:13px;color:var(--text-muted);line-height:1.75;}
+
+/* ─── SECTION LIGHT / ALT ─────────────────────────────── */
+.section-light{background:var(--bg-white);padding:clamp(60px,8vw,96px) 0;}
+.section-alt{background:var(--bg-light);padding:clamp(60px,8vw,96px) 0;}
+
+/* ─── MARKET CHARTS ─────────────────────────────────────── */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:44px;}
+.chart-card{
+  background:#fff;border:1px solid rgba(15,52,96,0.15);
+  border-radius:18px;padding:24px;
+  box-shadow:0 4px 16px rgba(15,52,96,0.06);
+}
+.chart-card h4{font-family:var(--display);font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
+.chart-card p{font-size:12px;color:var(--text-muted);margin-bottom:20px;font-family:var(--mono);}
+.chart-wrap{height:260px;position:relative;}
+
+/* ─── ABOUT PAGE ─────────────────────────────────────────── */
+.about-hero{
+  background:linear-gradient(140deg,#D6EAF8 0%,#B2F5EA 60%,#00D4AA 100%);
+  padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);
+  position:relative;overflow:hidden;
+}
+.about-hero::after{
+  content:'';position:absolute;bottom:-60px;left:-60px;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(15,52,96,0.15) 0%,transparent 70%);
+}
+.about-hero .container{position:relative;z-index:1;}
+.founders-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:44px;}
+.founder-card{
+  background:#fff;border:1px solid rgba(15,52,96,0.15);
+  border-radius:18px;padding:clamp(20px,3vw,36px);
+  box-shadow:0 4px 20px rgba(15,52,96,0.08);
+}
+.founder-img{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-dark));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:24px;font-weight:800;color:#fff;margin-bottom:16px;}
+.founder-card h3{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
+.founder-card .role{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dim);margin-bottom:14px;}
+.founder-card p{font-size:13px;color:var(--text-muted);line-height:1.8;}
+.founder-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.f-badge{background:rgba(15,52,96,0.08);border:1px solid rgba(15,52,96,0.18);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--blue-dim);letter-spacing:0.5px;}
+
+/* ─── FAQ ─────────────────────────────────────────────── */
+.faq-wrap{display:flex;flex-direction:column;gap:12px;margin-top:32px;}
+.faq-item{background:#fff;border:1px solid rgba(15,52,96,0.15);border-radius:14px;overflow:hidden;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;gap:16px;}
+.faq-q h4{font-family:var(--display);font-size:15px;font-weight:600;color:var(--text-dark);}
+.faq-icon{font-size:20px;font-weight:300;color:var(--blue);flex-shrink:0;transition:transform 0.3s;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-body{display:none;padding:0 22px 18px;font-size:14px;color:var(--text-muted);line-height:1.8;border-top:1px solid rgba(15,52,96,0.08);}
+.faq-item.open .faq-body{display:block;}
+
+/* ─── PRICING ─────────────────────────────────────────── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:44px;}
+.price-card{
+  background:#fff;border:1px solid rgba(15,52,96,0.15);
+  border-radius:18px;padding:clamp(22px,3vw,36px);
+  position:relative;transition:border-color 0.25s,box-shadow 0.25s,transform 0.25s;
+  box-shadow:0 4px 16px rgba(15,52,96,0.06);
+}
+.price-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(15,52,96,0.14);}
+.price-card.featured{
+  border:2px solid var(--blue);
+  box-shadow:0 8px 40px rgba(15,52,96,0.18);
+  transform:scale(1.03);
+}
+.price-card.featured:hover{transform:scale(1.03) translateY(-4px);}
+.featured-label{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+  color:#fff;padding:4px 18px;border-radius:20px;
+  font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  white-space:nowrap;
+}
+.price-tier{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-dim);margin-bottom:8px;}
+.price-title{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px;}
+.price-amount{font-family:var(--display);font-size:clamp(34px,4vw,48px);font-weight:800;color:var(--blue-dark);line-height:1;}
+.price-amount span{font-size:16px;font-weight:500;color:var(--text-muted);}
+.price-desc{font-size:13px;color:var(--text-muted);margin:12px 0 20px;line-height:1.6;}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.price-features li{font-size:13px;color:var(--text-mid);display:flex;align-items:flex-start;gap:8px;}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* ─── PROCESS ─────────────────────────────────────────── */
+.process-step{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(30px,5vw,72px);align-items:center;
+  margin-bottom:clamp(56px,8vw,96px);
+}
+.process-step:last-child{margin-bottom:0;}
+.step-num{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue-dim);margin-bottom:12px;}
+.step-h3{font-family:var(--display);font-size:clamp(22px,2.5vw,32px);font-weight:800;color:var(--text-dark);margin-bottom:16px;line-height:1.2;}
+.step-p{color:var(--text-muted);font-size:15px;line-height:1.8;margin-bottom:18px;}
+.step-img{width:100%;aspect-ratio:16/10;border-radius:16px;border:1px solid rgba(15,52,96,0.15);overflow:hidden;box-shadow:0 8px 32px rgba(15,52,96,0.1);background:linear-gradient(135deg,var(--bg-light),var(--bg-section));display:flex;align-items:center;justify-content:center;}
+.step-img i{font-size:72px;color:rgba(15,52,96,0.2);}
+
+/* ─── CONTACT ─────────────────────────────────────────── */
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;}
+.contact-form{background:#fff;border-radius:20px;padding:clamp(24px,4vw,44px);border:1px solid rgba(15,52,96,0.15);box-shadow:0 4px 20px rgba(15,52,96,0.08);}
+.contact-form h3{font-family:var(--display);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:8px;}
+.contact-form p{font-size:14px;color:var(--text-muted);margin-bottom:28px;line-height:1.6;}
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--text-dark);margin-bottom:6px;font-family:var(--mono);letter-spacing:0.5px;text-transform:uppercase;}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:12px 16px;border:1.5px solid rgba(15,52,96,0.18);
+  border-radius:10px;font-size:14px;font-family:var(--font);
+  color:var(--text-dark);background:#fff;
+  transition:border-color 0.2s,box-shadow 0.2s;outline:none;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(15,52,96,0.1);}
+.form-group textarea{min-height:120px;resize:vertical;}
+.contact-info{display:flex;flex-direction:column;gap:0;}
+.contact-info h3{font-family:var(--display);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:16px;}
+.contact-info p{font-size:15px;color:var(--text-muted);line-height:1.7;margin-bottom:28px;}
+.contact-detail{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid rgba(15,52,96,0.1);}
+.contact-detail .icon{width:44px;height:44px;background:rgba(15,52,96,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0;font-size:18px;}
+.contact-detail .text strong{display:block;font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:2px;}
+.contact-detail .text span{font-size:13px;color:var(--text-muted);}
+
+/* ─── FOOTER ─────────────────────────────────────────── */
+footer{background:var(--footer-bg);padding:clamp(48px,6vw,80px) 0 0;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+.footer-brand{font-family:var(--display);font-size:22px;font-weight:800;color:#fff;margin-bottom:14px;}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.8;margin-bottom:20px;}
+.footer-badges{display:flex;flex-wrap:wrap;gap:8px;}
+.footer-badge{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.8);letter-spacing:0.5px;}
+.footer-col-title{font-family:var(--mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:16px;}
+.footer-col{display:flex;flex-direction:column;gap:10px;}
+.footer-col a{font-size:13px;color:rgba(255,255,255,0.65);cursor:pointer;transition:color 0.2s;}
+.footer-col a:hover{color:#fff;}
+.footer-bottom-bar{border-top:1px solid rgba(255,255,255,0.1);padding:20px 0;display:flex;align-items:center;justify-content:space-between;}
+.footer-bottom-bar p{font-size:12px;color:rgba(255,255,255,0.45);font-family:var(--mono);}
+.footer-bottom-bar p span{color:rgba(255,255,255,0.7);}
+.footer-bottom-links{display:flex;gap:20px;}
+.footer-bottom-links a{font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer;font-family:var(--mono);transition:color 0.2s;}
+.footer-bottom-links a:hover{color:rgba(255,255,255,0.85);}
+
+/* ─── COMPARISON TABLE ───────────────────────── */
+.comp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:40px;border-radius:16px;border:1px solid rgba(15,52,96,0.15);box-shadow:0 4px 16px rgba(15,52,96,0.06);}
+.comp-table{width:100%;border-collapse:collapse;background:#fff;}
+.comp-table th{background:linear-gradient(135deg,var(--blue-dark),var(--blue-deeper));color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:16px 18px;text-align:left;}
+.comp-table th:first-child{border-radius:16px 0 0 0;}
+.comp-table th:last-child{border-radius:0 16px 0 0;}
+.comp-table td{padding:14px 18px;font-size:13px;color:var(--text-mid);border-bottom:1px solid rgba(15,52,96,0.08);}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table tr:hover td{background:rgba(15,52,96,0.03);}
+.comp-table td:first-child{font-weight:600;color:var(--text-dark);}
+.comp-table .yes{color:#008C72;font-weight:700;}
+.comp-table .no{color:#94a3b8;font-weight:500;}
+.comp-table .highlight-col{background:rgba(15,52,96,0.06);}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .btn-demo-nav{display:none;}
+
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
+  .hero-inner > div:last-child{display:none;}
+  .hero .hero-mini-stats{display:none;}
+
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .platform-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr 1fr;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .price-card.featured{transform:scale(1);}
+  .process-step{grid-template-columns:1fr;gap:28px;}
+  .step-img{aspect-ratio:16/9;}
+  .contact-wrap{grid-template-columns:1fr;}
+  .charts-grid{grid-template-columns:1fr;}
+  .founders-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .footer-bottom-bar{flex-direction:column;align-items:flex-start;gap:10px;}
+  .footer-bottom-links{flex-wrap:wrap;gap:12px;}
+  .section-light [style*="grid-template-columns:1fr 1fr"],
+  .section-alt [style*="grid-template-columns:1fr 1fr"]{
+    grid-template-columns:1fr !important;
+  }
+  [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr !important;}
+  .addons-grid{grid-template-columns:1fr !important;}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr;}
+  .hero-mini-stats{flex-direction:column;}
+  .hero-mini-card{min-width:unset;width:100%;}
+  .btn-primary,.btn-secondary,.btn-white{width:100%;justify-content:center;}
+  .footer-bottom-links{flex-direction:column;gap:8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════ -->
+<nav class="navbar">
+  <a class="nav-logo" onclick="showPage('home')">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><circle cx="17" cy="17" r="4"/></svg>
+    </div>
+    <div class="nav-logo-text">
+      ThePermitGraph
+      <span>Permit & Compliance Intelligence</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><button id="nav-home" class="active" onclick="showPage('home')">Home</button></li>
+    <li><button id="nav-about" onclick="showPage('about')">About</button></li>
+    <li><button id="nav-platform" onclick="showPage('platform')">Platform</button></li>
+    <li><button id="nav-market" onclick="showPage('market')">Market</button></li>
+    <li><button id="nav-process" onclick="showPage('process')">Process</button></li>
+    <li><button id="nav-faq" onclick="showPage('faq')">FAQ</button></li>
+    <li><button id="nav-pricing" onclick="showPage('pricing')">Pricing</button></li>
+    <li><button id="nav-contact" onclick="showPage('contact')">Contact</button></li>
+  </ul>
+
+  <div class="nav-right">
+    <button class="btn-demo-nav" onclick="showPage('contact')">Request Demo</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <button onclick="showPage('home');closeMobile()">Home</button>
+  <button onclick="showPage('about');closeMobile()">About</button>
+  <button onclick="showPage('platform');closeMobile()">Platform</button>
+  <button onclick="showPage('market');closeMobile()">Market</button>
+  <button onclick="showPage('process');closeMobile()">Process</button>
+  <button onclick="showPage('faq');closeMobile()">FAQ</button>
+  <button onclick="showPage('pricing');closeMobile()">Pricing</button>
+  <button onclick="showPage('contact');closeMobile()">Contact</button>
+  <button class="mob-cta" onclick="showPage('contact');closeMobile()">Request Demo →</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : HOME
+═══════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          The World's First AI-Powered Permit Graph Intelligence System
+        </div>
+        <h1>
+          Permits Faster.<br>
+          <span class="blue">Compliance</span> Smarter.
+          <span class="dark-blue">Risk Zero.</span>
+        </h1>
+        <div class="hero-rule"></div>
+        <p class="hero-body">
+          ThePermitGraph is an AI-powered permit and compliance intelligence platform that helps businesses, developers, and contractors map, track, and obtain permits across every jurisdiction  automatically. From planning permissions to environmental clearances, we transform weeks of manual research into minutes of intelligent graph-driven insight.
+        </p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Book a Platform Demo</button>
+          <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+        </div>
+        <div class="hero-mini-stats">
+          
+        </div>
+      </div>
+      <!-- DASHBOARD -->
+      <div>
+        <div class="score-card">
+          <div class="score-card-top">
+            <div>
+              <div class="score-card-label">ThePermitGraph · Live Engine</div>
+              <h3 class="dashboard-title">Compliance Intelligence Dashboard</h3>
+            </div>
+            <div class="live-dot-wrap"><span class="live-dot"></span>LIVE</div>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">PA</div>
+            <span class="score-lbl">Permits Active This Month</span>
+            <span class="score-val">1,284 ↑22.4%</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon green-bg">CR</div>
+            <span class="score-lbl">Compliance Rate</span>
+            <span class="score-val">99.3% ↑4.1%</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon light-bg">RR</div>
+            <span class="score-lbl">Risk Flags Resolved</span>
+            <span class="score-val">347 Auto-Cleared</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">TT</div>
+            <span class="score-lbl">Avg. Permit Turnaround</span>
+            <span class="score-val">2.4 Days ↓68%</span>
+          </div>
+          <div class="score-big">
+            <div class="score-big-num">4.9<span style="font-size:24px;">x</span></div>
+            <div class="score-big-info">
+              <div class="label">Faster Than Manual Process</div>
+              <div class="sub">AI Graph Engine · Auto-Mapped · ↑12% vs Last Quarter</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <section class="section-blue">
+    <div class="container">
+      <div class="label-tag-white">The Global Permit & Compliance Crisis</div>
+      <h2 class="section-h2 white">Businesses Are Losing Billions to<br>Permit Delays and Compliance Blind Spots.</h2>
+      <div class="section-divider divider-white"></div>
+      <p class="para-light" style="max-width:760px;">
+        Globally, over $1.3 trillion in construction and development projects are delayed annually due to permit bottlenecks, compliance mismatches, and regulatory fragmentation. UK businesses alone lose an estimated £6.2 billion per year to avoidable compliance penalties, missed deadlines, and redundant legal fees. ThePermitGraph is the live agentic intelligence layer that maps every permit dependency, tracks every deadline, and automates every compliance checkpoint  before a fine hits.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">£6.2B</div>
+          <div class="stat-lbl">Annual UK compliance penalty costs  80% of which are avoidable with real-time permit graph intelligence</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">73%</div>
+          <div class="stat-lbl">Of UK SMEs report permit delays as their top operational bottleneck, killing project timelines and cash flow</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">89%</div>
+          <div class="stat-lbl">Of developers still use manual spreadsheets and email chains to track permits  a catastrophic operational risk</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£45K+</div>
+          <div class="stat-lbl">Average cost per delayed project per month due to compliance gaps and permit mismanagement for UK businesses</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLATFORM PREVIEW -->
+  <section class="platform-section">
+    <div class="container">
+      <div class="label-tag">Core Intelligence Modules</div>
+      <h2 class="section-h2 dark">Six Modules. One Complete Permit Graph Intelligence OS.</h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark platform-sub">
+        ThePermitGraph combines Permit Mapping, Compliance Tracking, Risk Assessment, Deadline Automation, Jurisdiction Intelligence, and Regulatory Analytics into one unified SaaS platform  no-code, real-time, and AI-driven.
+      </p>
+      <div class="platform-grid">
+
+        <!-- CARD 1 -->
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="padding:0;background:#EBF4FF;">
+            <img src="the1.jpg" alt="Permit Dependency Graph Engine" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 01</div>
+            <h3>Permit Dependency Graph Engine</h3>
+            <p>AI maps every permit relationship, dependency, and prerequisite across your project  automatically identifying what you need, in what order, from which authority.</p>
+            <div class="more-text">
+              The Permit Dependency Graph ingests your project type, location, land classification, and sector to generate a complete permit pathway graph  showing exactly which consents unlock others, which run in parallel, and which approvals are critical-path dependencies. Reduces pre-application research from weeks to hours.
+            </div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="padding:0;background:#EBF4FF;">
+            <img src="the2.jpg" alt="Live Compliance Monitoring Engine" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 02</div>
+            <h3>Live Compliance Monitoring & Alert Engine</h3>
+            <p>Real-time surveillance of every active permit, condition, and regulatory obligation  with automated alerts before deadlines and expiry windows are breached.</p>
+            <div class="more-text">
+              The Compliance Monitoring Engine tracks permit conditions, renewal dates, inspection schedules, and reporting obligations across all your active permits. When a regulatory change affects your compliance position, the system flags it instantly and generates a prioritised remediation plan  keeping your legal exposure at zero.
+            </div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="padding:0;background:#EBF4FF;">
+            <img src="the3.jpg" alt="Jurisdiction Intelligence" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 03</div>
+            <h3>Jurisdiction Intelligence & Risk Mapping</h3>
+            <p>AI-powered analysis of regulatory environments across 40+ jurisdictions  identifying hidden compliance risks before they become project-stopping problems.</p>
+            <div class="more-text">
+              The Jurisdiction Intelligence Module maintains a live regulatory knowledge graph updated daily across local planning authorities, environment agencies, building control bodies, and sector-specific regulators. When you enter a new geography, the system auto-maps the full regulatory landscape in minutes  not weeks of legal research.
+            </div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY SECTION -->
+  <section class="why-section">
+    <div class="container">
+      <div class="label-tag">Why ThePermitGraph</div>
+      <h2 class="section-h2 dark">Built for the AI-Agentic Era.<br>Not Just a Compliance Tracker with a Search Bar.</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-sitemap"></i></div>
+          <h4>Live Permit Dependency Graphing</h4>
+          <p>Moves beyond static checklists to a live relational graph that connects every permit, condition, and authority  showing exactly what unlocks what and what is blocking your project.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-brain"></i></div>
+          <h4>Regulatory DNA Preservation</h4>
+          <p>Captures your organisation's institutional compliance knowledge so that when a key legal or compliance expert leaves, their regulatory logic remains permanently encoded in the platform.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Zero-Penalty Risk Engine</h4>
+          <p>The Compliance Risk Layer identifies exactly where regulatory exposure is building and provides automated remediation  protecting your business against fines, enforcement notices, and licence revocations.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-plug"></i></div>
+          <h4>System-Agnostic Integration</h4>
+          <p>Designed to connect with any project management platform (Procore, Aconex, Autodesk, Microsoft Project)  operators never need to abandon existing tooling as they scale.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-leaf"></i></div>
+          <h4>ESG & Environmental Compliance</h4>
+          <p>Generates audit-ready environmental compliance reports aligned with UK Net Zero, EIA requirements, and Biodiversity Net Gain obligations  fully integrated into the permit graph.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-pound-sign"></i></div>
+          <h4>SME-Optimised Pricing</h4>
+          <p>Tiered SaaS from £99/month  giving independent developers and SME contractors enterprise-level permit intelligence without costly legal teams or consultancy retainers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page home -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : ABOUT
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <section class="about-hero">
+    <div class="container">
+      <div class="label-tag">About Us</div>
+      <h2 class="section-h2 dark">Built by Developers Who Lived the Problem.<br><span style="color:var(--blue-dark);">Designed for the Compliance-First Era.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">ThePermitGraph is a UK-based SaaS venture founded by practitioners who experienced firsthand the devastating cost of permit delays, compliance failures, and regulatory fragmentation  combining deep expertise in planning law, construction management, and AI engineering to solve the most pressing challenge facing UK developers today: the "Regulatory Opacity" that costs the sector billions in delayed projects and avoidable penalties.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Get in Touch</button>
+        <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision & Mission -->
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Vision & Mission</div>
+      <h2 class="section-h2 dark">To Be the Global Standard for<br>AI-Powered Permit Graph Intelligence.</h2>
+      <div class="section-divider divider-blue"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:32px;">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-eye"></i></div>
+          <h4>Our Vision</h4>
+          <p>We aspire to be the global standard for "Permit Graph Intelligence"  fostering a future in which every development, construction, and infrastructure project navigates regulatory complexity with the precision, speed, and confidence that only real-time AI-powered compliance mapping can provide.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-bullseye"></i></div>
+          <h4>Our Mission</h4>
+          <p>To enable UK and global businesses to move from "reactive compliance firefighting" to "proactive permit orchestration"  leveraging a live regulatory intelligence layer that synchronises every permit dependency, deadline, and condition across every jurisdiction automatically.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values -->
+  <section class="section-alt">
+    <div class="container">
+      <div class="label-tag">Core Values</div>
+      <h2 class="section-h2 dark">What Drives Everything We Build</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-lightbulb"></i></div>
+          <h4>Innovation</h4>
+          <p>Continuous advancement of our permit graph algorithms and regulatory knowledge base  staying ahead of evolving UK and international regulatory frameworks, planning reforms, and compliance obligations.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-crosshairs"></i></div>
+          <h4>Accuracy</h4>
+          <p>A commitment to high-fidelity regulatory mapping and the elimination of "Compliance Blind Spots"  ensuring every permit pathway, condition, and deadline is captured without gaps or misinterpretation.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-lock"></i></div>
+          <h4>Data Sovereignty</h4>
+          <p>Empowering businesses to own their compliance knowledge, permit history, and regulatory intelligence as a permanent, proprietary digital asset  never locked into consultant dependency.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-tachometer-alt"></i></div>
+          <h4>Speed</h4>
+          <p>Transforming permit research from multi-week manual processes into hours of automated graph-driven intelligence  so projects start faster, timelines are met, and costs are controlled.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-handshake"></i></div>
+          <h4>Trust</h4>
+          <p>Every piece of regulatory intelligence in ThePermitGraph is sourced from authoritative, verified regulatory bodies  with full audit trails for legal defensibility and professional accountability.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-universal-access"></i></div>
+          <h4>Accessibility</h4>
+          <p>Making enterprise-grade permit intelligence accessible to SME developers, solo contractors, and growing firms  at pricing that levels the playing field against large corporate legal teams.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Our Team</div>
+      <h2 class="section-h2 dark">The Minds Behind ThePermitGraph</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="founders-grid">
+        <div class="founder-card">
+          <div style="width:90px;height:90px;border-radius:50%;overflow:hidden;margin-bottom:16px;border:3px solid rgba(15,52,96,0.15);box-shadow:0 4px 16px rgba(15,52,96,0.12);">
+            <img src="FOUNDER_1_IMAGE_URL_HERE" alt="Founder 1" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:100%;background:linear-gradient(135deg,#0F3460,#07203A);display:flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-size:26px;font-weight:800;color:#fff;\'>N</div>'">
+          </div>
+          <h3>Naitik Patel</h3>
+          <div class="role">Co-Founder · International Business & Management</div>
+          <p>Masters in International Management and Business Development from Glasgow Caledonian University, London. Mechanical Engineering graduate from Gujarat Technological University. Brings a sharp commercial lens to ThePermitGraph's go-to-market strategy, business development, and international expansion roadmap  driving client growth across UK and global markets.</p>
+          <div class="founder-badges">
+            <span class="f-badge">MSc International Management</span>
+            <span class="f-badge">Business Development</span>
+            <span class="f-badge">Mechanical Engineering</span>
+            <span class="f-badge">Retail Management</span>
+          </div>
+        </div>
+        <div class="founder-card">
+          <div style="width:90px;height:90px;border-radius:50%;overflow:hidden;margin-bottom:16px;border:3px solid rgba(15,52,96,0.15);box-shadow:0 4px 16px rgba(15,52,96,0.12);">
+            <img src="FOUNDER_2_IMAGE_URL_HERE" alt="Founder 2" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:100%;background:linear-gradient(135deg,#00D4AA,#0F3460);display:flex;align-items:center;justify-content:center;font-family:Sora,sans-serif;font-size:26px;font-weight:800;color:#fff;\'>J</div>'">
+          </div>
+          <h3>Jimeshkumar H Patel</h3>
+          <div class="role">Co-Founder · Project Management & Engineering</div>
+          <p>MSc Project Management from BPP University, London. Mechanical Engineering graduate with 6+ years of upstream oil and gas operations experience at Gujarat State Petroleum Corporation. Leads ThePermitGraph's operational architecture, project delivery framework, and platform engineering  bringing proven expertise in complex, high-stakes operational environments to the compliance intelligence space.</p>
+          <div class="founder-badges">
+            <span class="f-badge">MSc Project Management</span>
+            <span class="f-badge">Oil & Gas Operations</span>
+            <span class="f-badge">Mechanical Engineering</span>
+            <span class="f-badge">Multi-Site Operations</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page about -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : PLATFORM
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-platform">
+  <section style="background:linear-gradient(140deg,#EBF4FF 0%,#D6EAF8 50%,#B2F5EA 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">The Platform</div>
+      <h2 class="section-h2 dark">Six Modules. One Complete<br><span style="color:var(--blue-dark);">Permit Intelligence Operating System.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">Every module of ThePermitGraph is designed to solve a specific, high-cost failure point in the permit and compliance lifecycle  from initial dependency mapping through to audit-ready reporting and multi-jurisdiction benchmarking.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request Demo →</button>
+        <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="platform-grid" style="grid-template-columns:repeat(3,1fr);">
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="padding:0;background:#EBF4FF;">
+            <img src="the4.jpg" alt="Permit Dependency Graph Engine" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 01</div>
+            <h3>Permit Dependency Graph Engine</h3>
+            <p>Automatically maps every permit prerequisite, parallel consent, and authority touchpoint for your project type and location.</p>
+            <div class="more-text">Generates a visual, navigable permit pathway graph. Identifies critical-path permits, optional consents, and jurisdiction-specific variations. Reduces pre-application research from weeks to hours for any project size or sector.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="padding:0;background:#EBF4FF;">
+            <img src="the5.jpg" alt="Live Compliance Monitoring Engine" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 02</div>
+            <h3>Live Compliance Monitoring Engine</h3>
+            <p>24/7 surveillance of all active permits, conditions, renewal windows, and reporting obligations with automated deadline alerts.</p>
+            <div class="more-text">Tracks permit conditions in real time. Sends automated alerts when deadlines approach, conditions are at risk, or regulatory changes affect your compliance position. Generates Manager Compliance Reports with one-click remediation options ready for sign-off.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="padding:0;background:#EBF4FF;">
+            <img src="the6.jpg" alt="Jurisdiction Intelligence Module" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 03</div>
+            <h3>Jurisdiction Intelligence Module</h3>
+            <p>Live regulatory knowledge graph across 40+ jurisdictions  auto-mapping the full regulatory landscape for any new geography in minutes.</p>
+            <div class="more-text">Updated daily from authoritative regulatory sources. Covers local planning authorities, the Environment Agency, building control, sector-specific bodies (Ofgem, HSE, CQC), and international equivalents. Identifies jurisdiction-specific risks, fee structures, and consultation requirements automatically.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="padding:0;background:#EBF4FF;">
+            <img src="the7.jpg" alt="Risk Assessment Engine" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 04</div>
+            <h3>Risk Assessment & Enforcement Intelligence</h3>
+            <p>AI-powered identification of enforcement risk, historical refusal patterns, and appeal success rates by authority and application type.</p>
+            <div class="more-text">Analyses historical planning decisions, enforcement actions, and appeal outcomes across all UK local planning authorities. Provides a Risk Score for every permit application before submission  enabling proactive redesign, pre-application consultation strategy, and enforcement avoidance.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="padding:0;background:#EBF4FF;">
+            <img src="the8.jpg" alt="Deadline Automation Workflow Engine" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 05</div>
+            <h3>Deadline Automation & Workflow Engine</h3>
+            <p>Automated task generation, team assignment, and escalation pathways for every permit milestone, condition discharge, and renewal event.</p>
+            <div class="more-text">Creates a fully automated compliance workflow from permit grant to final discharge  assigning tasks to the right team members, escalating overdue actions, and maintaining a complete audit trail for every regulatory obligation. Integrates with email, Slack, and project management platforms.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+        <div class="platform-card">
+          <div class="platform-img-wrap" style="padding:0;background:#EBF4FF;">
+            <img src="the9.jpg" alt="Regulatory Analytics & Benchmarking" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 06</div>
+            <h3>Regulatory Analytics & Benchmarking</h3>
+            <p>Portfolio-level compliance KPIs, authority performance benchmarks, and sector-wide permit velocity data for strategic decision-making.</p>
+            <div class="more-text">Provides KPI-style reporting on your organisation's compliance performance  permit approval rates, average determination times by authority, condition discharge velocity, and cost-per-permit metrics. Anonymised sector benchmarking helps identify where your performance leads or lags the market.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Table -->
+  <section class="section-alt">
+    <div class="container">
+      <div class="label-tag">Competitive Landscape</div>
+      <h2 class="section-h2 dark">ThePermitGraph vs. The Alternatives</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="comp-table-wrap">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th>Manual Spreadsheets</th>
+              <th>Planning Consultants</th>
+              <th>Generic PM Tools</th>
+              <th>Legal Compliance Software</th>
+              <th>ThePermitGraph</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Permit Dependency Graphing</td><td class="no">No</td><td class="no">Manual</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ AI-Automated</td></tr>
+            <tr><td>Live Compliance Monitoring</td><td class="no">No</td><td class="no">Periodic</td><td class="no">No</td><td class="no">Limited</td><td class="yes highlight-col">✓ 24/7 Real-Time</td></tr>
+            <tr><td>Jurisdiction Intelligence</td><td class="no">No</td><td class="no">Manual Research</td><td class="no">No</td><td class="no">Static DB</td><td class="yes highlight-col">✓ Live AI Graph</td></tr>
+            <tr><td>Enforcement Risk Scoring</td><td class="no">No</td><td class="no">Experience-Based</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Data-Driven AI</td></tr>
+            <tr><td>Deadline Automation</td><td class="no">Manual</td><td class="no">No</td><td class="no">Limited</td><td class="no">Partial</td><td class="yes highlight-col">✓ Full Workflow</td></tr>
+            <tr><td>Sector Benchmarking</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Anonymised AI</td></tr>
+            <tr><td>Cost Structure</td><td class="no">Staff Time</td><td class="no">£500–£5K/day</td><td class="no">Subscription</td><td class="no">Enterprise Only</td><td class="yes highlight-col">✓ SME SaaS £99/mo</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div><!-- end page platform -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : MARKET
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-market">
+  <section style="background:linear-gradient(140deg,#EBF4FF 0%,#D6EAF8 50%,#B2F5EA 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Market Analysis</div>
+      <h2 class="section-h2 dark">A £120 Billion Regulatory Burden Sector.<br><span style="color:var(--blue-dark);">ThePermitGraph is the Intelligence Layer.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">The global regulatory compliance technology market is valued at over $55 billion and growing at 13% CAGR. In the UK alone, businesses spend an estimated £120 billion annually on regulatory compliance  with the planning and permitting sector representing the most fragmented, under-digitalised, and highest-stakes segment. ThePermitGraph targets this massive, underserved market with affordable, AI-powered permit graph infrastructure.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request Demo →</button>
+        <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Market Data & Intelligence</div>
+      <h2 class="section-h2 dark">The Numbers Behind the Opportunity</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h4>UK Permit Market by Sector (SAM £M)</h4>
+          <p>Target addressable market across UK development and compliance sectors</p>
+          <div class="chart-wrap"><canvas id="chartSector"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>Key Compliance Pain Points  UK Businesses</h4>
+          <p>Primary challenges driving adoption of ThePermitGraph</p>
+          <div class="chart-wrap"><canvas id="chartRootCause"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>ThePermitGraph vs Competitors  Capability Radar</h4>
+          <p>Platform capabilities vs. existing market alternatives</p>
+          <div class="chart-wrap"><canvas id="chartRadar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>Global RegTech Market Growth 2022–2030</h4>
+          <p>Global market growth (USD B) + UK AI compliance adoption (%)</p>
+          <div class="chart-wrap"><canvas id="chartGrowth"></canvas></div>
+        </div>
+      </div>
+      <div class="charts-grid" style="grid-template-columns:1fr;margin-top:32px;">
+        <div class="chart-card">
+          <h4>Platform Feature Comparison  ThePermitGraph vs Market Average</h4>
+          <p>Capability scores across key permit intelligence dimensions (out of 100)</p>
+          <div class="chart-wrap"><canvas id="chartPerf"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Revenue Projections -->
+  <section class="section-blue">
+    <div class="container">
+      <div class="label-tag-white">Financial Projections</div>
+      <h2 class="section-h2 white">3-Year Revenue Trajectory</h2>
+      <div class="section-divider divider-white"></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">£142K</div>
+          <div class="stat-lbl">Year 1 Revenue · 120 active clients · UK pilot markets · SaaS + Integration fees</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£580K</div>
+          <div class="stat-lbl">Year 2 Revenue · 400+ clients · Full UK launch · £95K net profit · Full API suite</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£1.4M</div>
+          <div class="stat-lbl">Year 3 Revenue · 1,000+ UK firms · £280K net profit · Ireland/UAE pilots · Enterprise scaling</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">35+</div>
+          <div class="stat-lbl">High-value UK-based RegTech and compliance intelligence roles created by Year 5</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page market -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: PROCESS
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-process">
+  <section style="background:linear-gradient(140deg,#EBF4FF 0%,#D6EAF8 50%,#B2F5EA 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">How It Works</div>
+      <h2 class="section-h2 dark">From Reactive Compliance Firefighting<br>to <span style="color:var(--blue-dark);">Proactive Permit Graph Orchestration</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">ThePermitGraph operates as a closed-loop regulatory intelligence lifecycle  capturing, mapping, monitoring, intervening, benchmarking, and reporting  so every compliance decision is grounded in real AI-powered permit graph intelligence, not guesswork, out-of-date spreadsheets, or expensive consultant calls.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request a Demo →</button>
+        <button class="btn-secondary" onclick="showPage('platform')">Explore Modules</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light" style="padding-top:clamp(60px,8vw,96px);">
+    <div class="container">
+      <div class="label-tag">The 6-Phase Permit Intelligence Lifecycle</div>
+      <h2 class="section-h2 dark">A Complete Regulatory Intelligence Loop  Not Just a Deadline Tracker</h2>
+      <div class="section-divider divider-blue"></div>
+
+      <!-- Phase 1 -->
+      <div class="process-step">
+        <div>
+          <div class="step-num">Phase 01 · Map</div>
+          <h3 class="step-h3">Build Your Complete Permit Dependency Graph</h3>
+          <p class="step-p">ThePermitGraph ingests your project data  location, use class, land type, sector, and scale  to build a comprehensive Permit Dependency Graph. Every consent, pre-application requirement, and authority touchpoint is automatically mapped and visualised.</p>
+          <p class="step-p">The Mapping phase eliminates the hidden cost of regulatory discovery  giving you a precise, data-driven view of your entire permit pathway before a single application is submitted.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Automated Permit Graph Setup</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>Jurisdiction Auto-Detection</span>
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Zero Code Required</span>
+          </div>
+        </div>
+        <img src="the10.jpg" alt="Regulatory Analytics & Benchmarking" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="process-step">
+       <img src="the11.jpg" alt="Regulatory Analytics & Benchmarking" style="width:100%;height:100%;object-fit:cover;">
+        <div>
+          <div class="step-num">Phase 02 · Monitor</div>
+          <h3 class="step-h3">Real-Time Permit & Compliance Monitoring</h3>
+          <p class="step-p">The Monitoring Engine tracks every active permit, condition, renewal date, and reporting obligation in real time  sending automated alerts the moment a deadline approaches or a regulatory change affects your compliance position.</p>
+          <p class="step-p">Think of it as a 24/7 compliance officer watching every regulatory signal  objective, continuous, and immediately actionable.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Live Compliance Dashboard</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>Automated Deadline Alerts</span>
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Condition Tracking</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="process-step">
+        <div>
+          <div class="step-num">Phase 03 · Assess</div>
+          <h3 class="step-h3">Risk Assessment  Catch Compliance Gaps Before They Cost You</h3>
+          <p class="step-p">The Risk Assessment Engine cross-references your permit position against historical enforcement data, authority refusal patterns, and sector compliance benchmarks. A structured Manager Compliance Report is generated with one-click approval and remediation options.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Automated Risk Scoring</span>
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Manager Compliance Reports</span>
+          </div>
+        </div>
+        <img src="the12.jpg" alt="Regulatory Analytics & Benchmarking" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="process-step">
+       <img src="the13.jpg" alt="Regulatory Analytics & Benchmarking" style="width:100%;height:100%;object-fit:cover;">
+        <div>
+          <div class="step-num">Phase 04 · Automate</div>
+          <h3 class="step-h3">Automated Workflow  Permit Submission, Chasing & Condition Discharge</h3>
+          <p class="step-p">When a permit action is required, the Deadline Automation Engine generates tasks, assigns them to the right team members, and tracks their completion  automatically chasing overdue actions and escalating blocked items. The Workflow Engine resolves 80% of routine compliance tasks without human intervention.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Automated Task Assignment</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>Condition Discharge Tracking</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 5 -->
+      <div class="process-step">
+        <div>
+          <div class="step-num">Phase 05 · Benchmark</div>
+          <h3 class="step-h3">Federated Compliance Benchmarking  Learn From the Best</h3>
+          <p class="step-p">The Federated Regulatory Intelligence Network enables anonymised permit velocity and compliance benchmarks from UK businesses to continuously improve predictive models. Authority performance data from high-efficiency London development teams informs a regional SME contractor's application strategy  without revealing sensitive commercial data.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Sector-Wide Permit Insights</span>
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Privacy-Safe Benchmarking</span>
+          </div>
+        </div>
+        <img src="the14.jpg" alt="Federated Compliance Benchmarking" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+
+      <!-- Phase 6 -->
+      <div class="process-step">
+        <img src="the15.jpg" alt="Regulatory Analytics & Benchmarking" style="width:100%;height:100%;object-fit:cover;">
+        <div>
+          <div class="step-num">Phase 06 · Report</div>
+          <h3 class="step-h3">KPI-Style Reporting  From Regulatory Data to Strategic Decisions</h3>
+          <p class="step-p">Every insight is delivered as a prioritised, KPI-style Compliance Performance Report  not raw data exports. Teams receive Permit Health Scores, Compliance Risk Ratings, Enforcement Exposure metrics, and ranked remediation items ready for immediate action.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Permit & Compliance Scores</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>Audit-Ready Reports</span>
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Prioritised Action Items</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div><!-- end page process -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : FAQ
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-faq">
+  <section style="background:linear-gradient(140deg,#EBF4FF 0%,#D6EAF8 60%,#B2F5EA 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">FAQ</div>
+      <h2 class="section-h2 dark">Frequently Asked Questions</h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:600px;">Everything you need to know about ThePermitGraph and what it means for your organisation's permit efficiency and regulatory compliance in the AI-powered era.</p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container" style="max-width:840px;">
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What is ThePermitGraph and why does my business need it?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">ThePermitGraph is an AI-powered permit and compliance intelligence platform that solves the systemic operational crisis facing UK developers, contractors, and regulated businesses  specifically the "Regulatory Opacity" where permit dependencies, compliance conditions, and enforcement risks are invisible until they cause expensive project delays or fines. Unlike standard compliance trackers that serve as passive deadline lists, ThePermitGraph establishes a live Permit Intelligence Graph that automatically maps every regulatory dependency, monitors every active permit, and alerts teams to every compliance risk in real time. Pilot clients have achieved 94% faster permit mapping and zero compliance penalties.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>How is this different from traditional planning consultants or compliance software?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Traditional planning consultants charge £500–£5,000 per day and deliver periodic, static advice. Traditional compliance software maintains static databases updated quarterly. ThePermitGraph operates as a live AI intelligence layer  continuously updated from authoritative regulatory sources  that automatically maps permit dependencies, tracks compliance conditions, scores enforcement risk, and automates deadline workflows in real time. It is architecturally designed to complement, not replace, your legal team by handling the intelligence work so your advisors can focus on advocacy.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>Which jurisdictions and permit types does ThePermitGraph cover?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">ThePermitGraph currently covers 40+ UK and international jurisdictions including all UK local planning authorities, the Environment Agency, building control bodies, and key sector-specific regulators (Ofgem, HSE, CQC, FCA, and more). Permit types covered include planning permission, listed building consent, environmental permits, building regulations approval, HMO licences, premises licences, street works permits, and a growing library of sector-specific consents. New jurisdictions and permit types are added based on client demand and regulatory change.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>Is ThePermitGraph compliant with UK data protection regulations?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Yes. ThePermitGraph is architecturally designed to comply with UK GDPR, ICO guidance on AI and Data Protection, and the UK's Principles-Based AI Framework. All client project data is stored on UK-based infrastructure, encrypted at rest and in transit, and never shared with third parties or used to train models without explicit consent. Regulatory intelligence data is sourced exclusively from publicly available authoritative sources with full attribution and audit trails.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What sectors and business types does ThePermitGraph serve?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">ThePermitGraph is purpose-built for residential and commercial property developers, construction contractors, infrastructure delivery organisations, energy and utilities companies, hospitality operators, healthcare providers, and any UK business operating in a regulated environment. The platform is particularly powerful for organisations managing multiple concurrent projects across different local authority areas  where permit complexity and compliance risk multiply rapidly without intelligent management.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>How quickly can we get started with ThePermitGraph?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Getting started requires no technical setup or code. After selecting your plan (from £99/month), you complete a 45-minute Project Onboarding Session where you input your first project details. ThePermitGraph generates your initial Permit Dependency Graph within minutes. Your live Compliance Dashboard is active within 24 hours, and our Client Success team guides you through the first permit mapping and monitoring cycle to ensure you extract full value from day one.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>Can ThePermitGraph integrate with our existing project management tools?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-body">Yes. ThePermitGraph offers native integrations with Procore, Autodesk Construction Cloud, Microsoft Project, Aconex, and Asana  with API access available on Professional and Enterprise plans for custom integrations. The platform is designed as middleware-agnostic infrastructure that sits above your existing tooling, delivering permit intelligence into the workflows your teams already use  without requiring a technology replacement.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page faq -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : PRICING
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-pricing">
+  <section style="background:linear-gradient(140deg,#EBF4FF 0%,#D6EAF8 60%,#B2F5EA 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container" style="text-align:center;">
+      <div class="label-tag" style="justify-content:center;">Pricing</div>
+      <h2 class="section-h2 dark">Simple, Transparent Plans<br>for Every Organisation Size</h2>
+      <div class="section-divider divider-blue divider-center"></div>
+      <p class="para-dark" style="max-width:580px;margin:0 auto;">From solo contractors to national development groups  ThePermitGraph has a plan designed for your permit intelligence and compliance needs. SME-optimised pricing starting from just £99/month.</p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">Starter</div>
+          <div class="price-title">Starter Plan</div>
+          <div class="price-amount">£99<span>/mo</span></div>
+          <p class="price-desc">For independent contractors and small developers needing core permit dependency mapping and compliance deadline tracking.</p>
+          <ul class="price-features">
+            <li>Up to 5 active projects</li>
+            <li>Permit Dependency Graph Engine</li>
+            <li>Basic compliance deadline monitoring</li>
+            <li>3 jurisdiction coverage</li>
+            <li>Email deadline alerts</li>
+            <li>Monthly compliance report</li>
+            <li>Standard onboarding support</li>
+          </ul>
+          <button class="btn-secondary" onclick="showPage('contact')">Get Started</button>
+        </div>
+        <div class="price-card featured">
+          <div class="featured-label">Most Popular</div>
+          <div class="price-tier">Professional</div>
+          <div class="price-title">Professional Plan</div>
+          <div class="price-amount">£299<span>/mo</span></div>
+          <p class="price-desc">For growing development and construction teams needing full permit intelligence, risk assessment, and workflow automation.</p>
+          <ul class="price-features">
+            <li>Up to 25 active projects</li>
+            <li>Full Permit Dependency Graph Engine</li>
+            <li>Live Compliance Monitoring</li>
+            <li>20+ jurisdiction coverage</li>
+            <li>Risk Assessment & Enforcement Intelligence</li>
+            <li>Deadline Automation & Workflow Engine</li>
+            <li>Weekly compliance reports</li>
+            <li>Priority Client Success support</li>
+          </ul>
+          <button class="btn-primary" onclick="showPage('contact')">Start Free Trial</button>
+        </div>
+        <div class="price-card">
+          <div class="price-tier">Enterprise</div>
+          <div class="price-title">Enterprise Plan</div>
+          <div class="price-amount">£799<span>/mo</span></div>
+          <p class="price-desc">For national developers, infrastructure groups, and multi-site organisations needing unlimited project coverage, API access, and dedicated support.</p>
+          <ul class="price-features">
+            <li>Unlimited active projects</li>
+            <li>All 40+ jurisdictions covered</li>
+            <li>Full Regulatory Analytics & Benchmarking</li>
+            <li>Dedicated Client Success Manager</li>
+            <li>Custom API integration</li>
+            <li>Federated compliance benchmarking</li>
+            <li>Audit-ready compliance packs</li>
+            <li>Priority onboarding & training</li>
+          </ul>
+          <button class="btn-secondary" onclick="showPage('contact')">Contact Us</button>
+        </div>
+      </div>
+
+      <!-- Add-ons -->
+      <div style="margin-top:60px;">
+        <div class="label-tag">Professional Add-Ons</div>
+        <h3 style="font-family:var(--display);font-size:24px;font-weight:700;color:var(--text-dark);margin-bottom:8px;">Additional Services</h3>
+        <div class="section-divider divider-blue"></div>
+        <div class="addons-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:32px;">
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-plug"></i></div>
+            <h4>Custom Integration Setup</h4>
+            <p>Bespoke API integration with your existing project management platform (Procore, Autodesk, Aconex, Microsoft Project). One-off setup fee of <strong style="color:var(--blue-dark);">£1,200 per integration</strong>.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-search"></i></div>
+            <h4>Regulatory Landscape Audit</h4>
+            <p>Specialised deep-dive regulatory mapping for complex or novel project types. Bespoke audit fee of <strong style="color:var(--blue-dark);">£800–£2,500</strong> depending on project complexity and jurisdiction count.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-chart-bar"></i></div>
+            <h4>Premium Compliance Reports</h4>
+            <p>Advanced sector benchmarking, authority performance analysis, and portfolio risk intelligence. Annual Insights Subscription: <strong style="color:var(--blue-dark);">£2,500–£6,000</strong> per organisation.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-icon"><i class="fas fa-globe"></i></div>
+            <h4>International Expansion Support</h4>
+            <p>Platform configuration for Ireland, UAE, Singapore, and USA markets including local regulatory mapping, authority database setup, and jurisdiction-specific workflow templates. <strong style="color:var(--blue-dark);">Custom pricing.</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page pricing -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE : CONTACT
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <section style="background:linear-gradient(140deg,#EBF4FF 0%,#D6EAF8 60%,#B2F5EA 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Contact & Demo</div>
+      <h2 class="section-h2 dark">Request a Demo or<br><span style="color:var(--blue-dark);">Join Our Pilot Programme</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:600px;">Our personalised demos map your actual project's permit dependencies in live time  showing you exactly what permits you need, in what order, from which authorities, with what risk profile attached.</p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="contact-wrap">
+
+        <!-- CONTACT FORM -->
+        <div class="contact-form">
+          <h3>Book Your Platform Demo</h3>
+          <p>Fill in your details and our Client Success team will contact you within 24 hours to schedule your personalised permit intelligence demo.</p>
+
+          <form action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="62b21411-dcfc-4e57-b2e0-1ac936a0671c">
+            <input type="hidden" name="subject" value="New ThePermitGraph Demo Request">
+            <input type="hidden" name="from_name" value="ThePermitGraph Website">
+
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" name="name" placeholder="Your full name" required>
+            </div>
+
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" name="email" placeholder="your@company.co.uk" required>
+            </div>
+
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" placeholder="+44 7XXX XXXXXX">
+            </div>
+
+            <div class="form-group">
+              <label>Organisation Name</label>
+              <input type="text" name="org_name" placeholder="Your company or development group name">
+            </div>
+
+            <div class="form-group">
+              <label>Business Type</label>
+              <select name="business_type">
+                <option>Residential Property Developer</option>
+                <option>Commercial Property Developer</option>
+                <option>Construction Contractor</option>
+                <option>Infrastructure / Utilities</option>
+                <option>Energy / Renewables</option>
+                <option>Healthcare Provider</option>
+                <option>Hospitality Operator</option>
+                <option>Other Regulated Business</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>What are you most interested in?</label>
+              <textarea name="message" placeholder="Tell us about your permit challenges, the types of projects you run, the jurisdictions you operate in, or the features you'd like to explore..." required></textarea>
+            </div>
+
+            <button class="btn-primary" style="width:100%;justify-content:center;" type="submit">Request Demo →</button>
+          </form>
+        </div>
+
+        <!-- CONTACT INFO -->
+        <div class="contact-info">
+          <h3>Why Book a Demo?</h3>
+          <p>Our personalised demos map your actual project type, location, and sector through ThePermitGraph engine  showing you in real time which permits you need, what the dependency sequence looks like, where your compliance risks are concentrated, and how the platform's automated monitoring and workflow engine would manage your specific regulatory obligations. Every demo is tailored to your organisation's project portfolio, jurisdiction mix, and compliance challenges  not a generic product walk-through.</p>
+
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-envelope"></i></div>
+            <div class="text">
+              <strong>Email Us</strong>
+              <span>thepermitgraphuk@outlook.com</span>
+            </div>
+          </div>
+
+          
+
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="text">
+              <strong>UK Headquarters</strong>
+              <span>London & Manchester, United Kingdom</span>
+            </div>
+          </div>
+
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-clock"></i></div>
+            <div class="text">
+              <strong>Response Time</strong>
+              <span>Within 24 hours · Mon–Fri 9am–6pm GMT</span>
+            </div>
+          </div>
+
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-shield-alt"></i></div>
+            <div class="text">
+              <strong>Data Privacy</strong>
+              <span>UK GDPR · ICO Registered · ISO 27001 Aligned</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div><!-- end page contact -->
+
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">ThePermitGraph</div>
+        <p class="footer-desc">The UK's leading AI-powered Permit Graph Intelligence Platform  mapping, monitoring, and automating every permit dependency, compliance condition, and regulatory deadline in real time. Permits Faster. Compliance Smarter. Risk Zero.</p>
+        <div class="footer-badges">
+          <span class="footer-badge">UK GDPR Compliant</span>
+          <span class="footer-badge">ICO Registered</span>
+          <span class="footer-badge">ISO 27001 Aligned</span>
+          <span class="footer-badge">Net Zero Committed</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <div class="footer-col">
+          <a onclick="showPage('platform')">Permit Dependency Graph Engine</a>
+          <a onclick="showPage('platform')">Live Compliance Monitoring</a>
+          <a onclick="showPage('platform')">Jurisdiction Intelligence Module</a>
+          <a onclick="showPage('platform')">Risk Assessment Engine</a>
+          <a onclick="showPage('platform')">Deadline Automation Workflow</a>
+          <a onclick="showPage('platform')">Regulatory Analytics & Benchmarking</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <div class="footer-col">
+          <a onclick="showPage('about')">About ThePermitGraph</a>
+          <a onclick="showPage('about')">Our Team & Advisors</a>
+          <a onclick="showPage('process')">How It Works</a>
+          <a onclick="showPage('faq')">FAQ</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('pricing')">Pricing & Plans</a>
+          <a onclick="showPage('contact')">Request a Demo</a>
+          <a onclick="showPage('contact')">Pilot Programme</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Solutions</div>
+        <div class="footer-col">
+          <a onclick="showPage('platform')">Property Developers</a>
+          <a onclick="showPage('platform')">Construction Contractors</a>
+          <a onclick="showPage('platform')">Infrastructure Organisations</a>
+          <a onclick="showPage('platform')">Energy & Utilities</a>
+          <a onclick="showPage('pricing')">Starter · £99/mo</a>
+          <a onclick="showPage('pricing')">Professional · £299/mo</a>
+          <a onclick="showPage('pricing')">Enterprise · £799/mo</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <p>© 2026 <span>ThePermitGraph</span> · London & Manchester, UK · UK GDPR Compliant · Permit Intelligence for the Modern Era</p>
+      <div class="footer-bottom-links">
+        <a onclick="showPage('contact')">Privacy Policy</a>
+        <a onclick="showPage('contact')">Terms of Service</a>
+        <a onclick="showPage('contact')">Compliance Commitment</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+/* ─── PAGE NAV ───────────────────────────────── */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+name);
+  if(pg){pg.classList.add('active');}
+  const btn=document.getElementById('nav-'+name);
+  if(btn){btn.classList.add('active');}
+  window.scrollTo({top:0,behavior:'instant'});
+  if(name==='market'&&!window.marketChartsLoaded){initMarketCharts();window.marketChartsLoaded=true;}
+}
+
+function toggleCard(btn){
+  const card=btn.closest('.platform-card');
+  card.classList.toggle('open');
+  btn.innerHTML=card.classList.contains('open')?'Show Less':'Learn More';
+}
+
+function toggleFAQ(el){el.parentElement.classList.toggle('open');}
+
+function closeMobile(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('open');
+  document.getElementById('mobileNav').classList.toggle('open');
+});
+
+/* ─── CHART THEME ────────────────────────────── */
+const BLU='rgba(15,52,96,1)';
+const BLU2='rgba(15,52,96,0.7)';
+const BLU3='rgba(15,52,96,0.35)';
+const LBLU='rgba(0,212,170,0.85)';
+const LBLU2='rgba(178,245,234,0.8)';
+const GRID='rgba(15,52,96,0.08)';
+const MUTED='rgba(58,95,130,0.9)';
+
+Chart.defaults.font.family="'IBM Plex Mono', monospace";
+Chart.defaults.font.size=11;
+Chart.defaults.color=MUTED;
+
+/* ─── MARKET CHARTS ──────────────────────────── */
+function initMarketCharts(){
+  // UK Permit Market by Sector
+  new Chart(document.getElementById('chartSector').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Residential Developers','Commercial Property','Infrastructure','Energy & Utilities'],
+      datasets:[{
+        label:'SAM (£ Millions)',
+        data:[180,140,95,110],
+        backgroundColor:[BLU,BLU2,BLU3,LBLU],
+        borderRadius:6,barPercentage:0.6
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'£'+v+'M'}}}}
+  });
+
+  // Pain Points Doughnut
+  new Chart(document.getElementById('chartRootCause').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:['Permit Delays (73%)','Manual Tracking (89%)','No Dependency Mapping (91%)','Compliance Gaps (67%)','Jurisdiction Confusion (78%)'],
+      datasets:[{
+        data:[73,89,91,67,78],
+        backgroundColor:[BLU,BLU2,BLU3,LBLU,LBLU2],
+        borderColor:['rgba(15,52,96,0.9)','rgba(15,52,96,0.7)','rgba(15,52,96,0.4)','rgba(0,212,170,0.8)','rgba(178,245,234,0.8)'],
+        borderWidth:1.5
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:10,font:{size:10}}}}}
+  });
+
+  // Radar Competitive
+  new Chart(document.getElementById('chartRadar').getContext('2d'),{
+    type:'radar',
+    data:{
+      labels:['Permit Graph Mapping','Live Compliance Monitoring','Risk Assessment','Deadline Automation','Jurisdiction Intelligence','Benchmarking'],
+      datasets:[
+        {label:'ThePermitGraph',data:[5,5,5,5,5,5],backgroundColor:'rgba(15,52,96,0.1)',borderColor:BLU,borderWidth:2,pointBackgroundColor:BLU},
+        {label:'Planning Consultants',data:[3,1,2,1,3,1],backgroundColor:'rgba(0,212,170,0.06)',borderColor:LBLU,borderWidth:1.5,pointBackgroundColor:LBLU},
+        {label:'Generic PM Tools',data:[1,2,1,3,1,1],backgroundColor:'rgba(0,212,170,0.05)',borderColor:'rgba(0,212,170,0.5)',borderWidth:1.5,pointBackgroundColor:'rgba(0,212,170,0.5)'},
+        {label:'Legacy Compliance Software',data:[1,2,2,2,1,1],backgroundColor:'rgba(58,95,130,0.05)',borderColor:'rgba(58,95,130,0.4)',borderWidth:1.5,pointBackgroundColor:'rgba(58,95,130,0.4)'},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{r:{backgroundColor:'rgba(15,52,96,0.01)',grid:{color:GRID},pointLabels:{color:MUTED,font:{size:10}},ticks:{display:false},min:0,max:5}}}
+  });
+
+  // Market Growth
+  new Chart(document.getElementById('chartGrowth').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['2022','2023','2024','2025','2026','2027','2028','2030'],
+      datasets:[
+        {label:'Global RegTech Market (USD B)',data:[12,16,22,28,36,48,64,110],backgroundColor:BLU2,borderRadius:5,barPercentage:0.55},
+        {type:'line',label:'UK AI Compliance Adoption %',data:[null,3,6,11,20,32,48,68],borderColor:LBLU,borderWidth:2,yAxisID:'y2',tension:0.4,pointBackgroundColor:LBLU,fill:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:12,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'$'+v+'B'}},y2:{position:'right',grid:{display:false},ticks:{color:MUTED,callback:v=>v+'%'}}}}
+  });
+
+  // Performance Comparison
+  new Chart(document.getElementById('chartPerf').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Permit Dependency Graphing','Live Compliance Monitoring','Risk Assessment','Deadline Automation','Jurisdiction Intelligence','Benchmarking Analytics'],
+      datasets:[
+        {label:'ThePermitGraph',data:[98,97,95,96,94,92],backgroundColor:BLU2,borderRadius:5,barPercentage:0.35},
+        {label:'Market Average',data:[5,8,6,12,4,2],backgroundColor:LBLU2,borderRadius:5,barPercentage:0.35}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED,font:{size:9}}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>v+' pts'}}}}
+  });
+}
+</script>
+</body>
+</html>
